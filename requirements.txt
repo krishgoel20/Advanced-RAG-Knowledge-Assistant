@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-dotenv
+pypdf
+qdrant-client
+sentence-transformers
+groq
+langchain-text-splitters
+rank-bm25

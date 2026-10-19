@@ -1,0 +1,17 @@
+[
+  {"question": "What was Tesla's total revenue in 2023?", "expected": ["96.77 billion", "96,773"]},
+  {"question": "How much unrecognized stock-based compensation expense did Tesla have under performance-based grants as of December 31, 2023?", "expected": ["$655 million"]},
+  {"question": "What was total stock-based compensation expense in 2022?", "expected": ["1,560"], "answer_expected": ["1,560", "1.56"]},
+  {"question": "How long do stock options and RSUs generally vest over?", "expected": ["generally four years"], "answer_expected": ["four-year", "four years"]},
+  {"question": "What was Tesla's automotive sales revenue in 2023?", "expected": ["78,509"]},
+  {"question": "What was Tesla's automotive sales revenue in 2022?", "expected": ["67,210"]},
+  {"question": "By how much did Tesla's total revenues increase in 2023 compared to the prior year?", "expected": ["15.31 billion"]},
+  {"question": "How did automotive leasing revenue change in 2023?", "expected": ["$356 million"]},
+  {"question": "By how much did cost of services and other revenue increase in 2023?", "expected": ["$1.95 billion"]},
+  {"question": "Who is Tesla's independent registered public accounting firm?", "expected": ["PricewaterhouseCoopers"]},
+  {"question": "Which pricing model is used to estimate the fair value of stock option awards?", "expected": ["scholes"]},
+  {"question": "How much stock-based compensation expense was capitalized to the consolidated balance sheets in 2023?", "expected": ["$199 million"]},
+  {"question": "How much total unrecognized stock-based compensation expense relates to non-performance awards as of December 31, 2023?", "expected": ["4.82 billion"]},
+  {"question": "What income tax benefits were recognized from stock-based compensation expense in 2023?", "expected": ["$326 million"]},
+  {"question": "How many market capitalization milestones were in the 2018 CEO Performance Award?", "expected": ["12 market capitalization milestones"]}
+]
