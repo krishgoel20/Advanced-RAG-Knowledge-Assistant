@@ -1,4 +1,4 @@
-# Advanced RAG Knowledge Assistant 🧠
+# PageLight 🧠
  
 A question-answering API over PDF documents, built beyond the basic "PDF chatbot": hybrid retrieval, cross-encoder reranking, page-level citations, and an evaluation harness that measured what each stage actually contributed.
  
