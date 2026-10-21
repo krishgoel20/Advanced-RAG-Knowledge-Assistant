@@ -1,11 +1,11 @@
 # PageLight 🧠
- 
+
 A question-answering API over PDF documents, built in stages from a basic RAG pipeline into something closer to a real application: better chunking, hybrid search, cross-encoder reranking, page-level citations, and an evaluation harness. Each stage was measured before moving on, including the ones that did not help.
- 
-Test corpus: Tesla's FY2022 Form 10-K and FY2023 annual report (the PDFs are not included in this repo).
- 
+
+Test corpus: Tesla's FY2022 Form 10-K and FY2023 annual report (both PDFs are included in `data/`).
+
 ---
- 
+
 ## What it does
 
 **For users asking questions:**
@@ -24,8 +24,8 @@ Test corpus: Tesla's FY2022 Form 10-K and FY2023 annual report (the PDFs are not
  
 ## What makes it different
  
-Most "chat with your PDF" demos embed fixed-size chunks, run a single vector search, and return plain text. This project adds a measured layer on top of that baseline:
- 
+Most "chat with your PDF" demos embed fixed-size chunks, run a single vector search, and return plain text. This one adds a measured layer on top of that baseline:
+
 | Feature | Basic PDF chatbot | PageLight |
 |---|---|---|
 | **Chunking** | One fixed-size splitter, never compared | Fixed, recursive and semantic chunking built and compared; fixed-size chosen from results |
@@ -35,8 +35,8 @@ Most "chat with your PDF" demos embed fixed-size chunks, run a single vector sea
 | **Trust** | Take the LLM's word | Citation validation, with warnings returned in the response |
 | **Quality claims** | "It seems to work" | Evaluation harness with hit@5, MRR, pool recall, and a retrieval ablation |
 | **Negative results** | Rarely reported | Documented, for ex. BM25 adding nothing once a reranker is in place |
- 
-None of the individual techniques here is new. What distinguishes the project is that each one was measured, and that the results (including the ties and failures) are reported below.
+
+None of the individual techniques here is new. What distinguishes this one is that each one was measured, and that the results (including the ties and failures) are reported below.
  
 ---
  
@@ -50,7 +50,7 @@ None of the individual techniques here is new. What distinguishes the project is
 | Embeddings | `sentence-transformers`: `all-MiniLM-L6-v2` (384-dim) |
 | Vector store | Qdrant (local on-disk mode) |
 | Keyword search | `rank-bm25` (BM25Okapi, in-memory) |
-| Fusion | Reciprocal Rank Fusion (k = 60) |
+| Fusion | Reciprocal Rank Fusion (k=60) |
 | Reranker | `cross-encoder/ms-marco-MiniLM-L-6-v2` |
 | LLM | Groq API (`openai/gpt-oss-120b`) |
 | Config | `python-dotenv` |
@@ -62,7 +62,7 @@ None of the individual techniques here is new. What distinguishes the project is
 ```
 Ingestion (python -m app.ingest <strategy>)
         ↓
-PDFs read page by page (page number kept with every chunk)
+PDFs read page-by-page (page number kept with every chunk)
         ↓
 Whitespace collapsed (some PDFs extract one token per line)
         ↓
@@ -116,8 +116,6 @@ Advanced-RAG-Knowledge-Assistant/
 ├── qdrant_data/             # Qdrant on-disk storage (not committed)
 ├── eval_set.json            # Evaluation questions with expected phrases
 ├── requirements.txt
-├── .env                     # GROQ_API_KEY (not committed)
-└── README.md
 ```
  
 ---
@@ -167,7 +165,6 @@ answer_expected   — optional phrases checked in the generated answer instead
 ### Pre-requisites
 - Python 3.11+
 - Groq API key ([console.groq.com](https://console.groq.com))
-- One or more PDFs to index
 
 ### 1. Clone the repository
  
@@ -389,4 +386,6 @@ With `--llm`, it also reports whether citations are valid and whether the answer
 
 ## Possible Next Steps
  
-Metadata filtering by document or year, near-duplicate removal, table-aware extraction, a numeric grounding check that verifies figures in the answer appear in the cited chunks, an LLM-judged faithfulness metric, a larger evaluation set, and Qdrant in Docker for concurrent access.
+Metadata filtering by document or year, near-duplicate removal, table-aware extraction, a numeric grounding check that verifies answer figures appear in the cited chunks, an LLM-judged faithfulness metric, a larger evaluation set, and Qdrant in Docker for concurrent access.
+
+---
