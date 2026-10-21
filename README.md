@@ -112,7 +112,7 @@ Advanced-RAG-Knowledge-Assistant/
 │   ├── main.py              # FastAPI app (/ and /ask)
 │   ├── evaluate.py          # Retrieval + answer evaluation
 │   └── debug_query.py       # Print the exact chunks the LLM receives for a query
-├── data/                    # PDFs to index (not committed)
+├── data/                    # Source PDFs (included): Tesla FY2022 10-K, FY2023 annual report
 ├── qdrant_data/             # Qdrant on-disk storage (not committed)
 ├── eval_set.json            # Evaluation questions with expected phrases
 ├── requirements.txt
@@ -195,16 +195,18 @@ Create a `.env` file in the project root:
 ```
 GROQ_API_KEY=your_groq_api_key
 ```
- 
-### 4. Add documents and ingest
- 
-Put your PDFs in `data/`, then build the index:
- 
+
+### 4. Ingest the documents
+
+The two Tesla PDFs are already in `data/` (see [Data](#data)), so you can build the index straight away:
+
 ```bash
 python -m app.ingest fixed
 ```
- 
+
 `fixed` is the default used by the API. You can also run `python -m app.ingest recursive` and `python -m app.ingest semantic` to build the other collections. Ingestion prints the chunk count per PDF and warns if the stored count does not match what was written.
+
+To index your own documents instead, add PDFs to `data/` and run the same command. The included evaluation set only applies to the Tesla PDFs.
  
 ### 5. Run the API
  
@@ -251,7 +253,7 @@ The repo ships with two public Tesla filings in `data/`, so ingestion and the ev
 
 Both are public SEC filings, available from [Tesla Investor Relations](https://ir.tesla.com) and [SEC EDGAR](https://www.sec.gov/edgar). Having two fiscal years lets the assistant answer year-over-year questions across documents.
 
-`eval_set.json` and its expected answers refer to these two files. To use your own documents, drop PDFs into `data/` and re-run ingestion, but the included evaluation set will then no longer apply.
+`eval_set.json` and its expected answers refer to these two files.
 
 ---
 
