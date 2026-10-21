@@ -355,10 +355,11 @@ With `--llm`, it also reports whether citations are valid and whether the answer
 4. **Hybrid search raises recall but did not change the reranked top 5.** Before reranking, hybrid improved hit@5 from 0.80 to 0.93, and it surfaced exact-phrase chunks that vector search missed on queries like "Form 10-K". After reranking, vector + rerank and hybrid + rerank were identical on this evaluation. The corpus is small, so the vector top 20 already contained every answer. Hybrid may matter more on a larger corpus, but this evaluation does not show it. On a numeric lookup ("total revenue in 2023"), BM25 also pushed the right chunk down before reranking by favoring passages that repeat "revenue".
 5. **Citation validity went from 4/11 to 11/11 by fixing output handling, not retrieval.** The model sometimes wrote fullwidth brackets (【1】) that the validator did not parse. Normalizing the output and tightening the prompt fixed it.
 6. **Whitespace cleaning was roughly neutral.** One PDF extracts one token per line, so text is collapsed before chunking. Chunk count dropped only about 1% and retrieval metrics did not change meaningfully.
+
 ---
 
 ## Key Concepts Demonstrated
- 
+
 - **RAG (Retrieval-Augmented Generation)** — Answers are generated only from retrieved excerpts, and the prompt tells the model to say so when the excerpts don't contain the answer, rather than falling back on training knowledge.
 - **Chunking strategies** — Fixed-size windows with overlap, recursive splitting on natural boundaries, and semantic splitting by sentence-embedding similarity, with measured trade-offs between them.
 - **Hybrid search with Reciprocal Rank Fusion** — BM25 and vector scores live on different scales, so results are merged by rank: each chunk scores `1 / (k + rank)` per list, summed across lists. Only position matters, not raw score.
@@ -366,10 +367,11 @@ With `--llm`, it also reports whether citations are valid and whether the answer
 - **Citation grounding** — Excerpts are numbered in the prompt so the model cites by number. The backend normalizes the output, validates the markers, and maps each one back to a file and page.
 - **Evaluation and ablation** — hit@5, MRR, and pool recall separate retrieval failures from ranking failures, and comparing vector + rerank with hybrid + rerank isolates what BM25 adds.
 - **Data hygiene** — Whitespace cleaning before chunking, and a stored-versus-written count check that caught stale points left behind by `delete_collection` in Qdrant's local mode.
+
 ---
 
 ## Limitations
- 
+
 - **No frontend** — The project is an API with auto-generated docs at `/docs`; there is no chat UI.
 - **No cloud deployment** — Everything runs locally. Qdrant's local mode allows one client per storage folder, so the API server and the ingestion or evaluation scripts can't run at the same time.
 - **PDF text only** — Extraction uses `pypdf`. Scanned PDFs without a text layer are not supported (no OCR), and tables lose their structure, which is why chunk size mattered.
@@ -377,15 +379,16 @@ With `--llm`, it also reports whether citations are valid and whether the answer
 - **Small evaluation set** — 15 questions, with expected phrases taken from chunks seen during development, which biases the set toward answerable questions. Differences of one question are noise.
 - **Citation validation checks format only** — It confirms markers exist and refer to real excerpts, not that each claim is supported by the excerpt it cites.
 - **No document or year awareness** — A generic question can pull figures from the older filing even when the newer one is loaded (observed on a stock-compensation summary).
-- **Near-duplicate chunks across filings** use up top-5 slots.
+- **Near-duplicate chunks across filings** — Repeated passages from the two filings use up top-5 slots.
 - **Embedding truncation** — `all-MiniLM-L6-v2` embeds at most 256 tokens per chunk, so number-dense 1000-character chunks may be partly cut off in vector search. BM25 and the reranker see the full text. This was not measured here.
 - **LLM responses are non-deterministic** — The same question can produce slightly different wording between runs, and Groq model IDs get retired over time.
 - **Single-turn only** — No conversation memory or follow-up questions.
 - **Older collections** — The `recursive` and `semantic` collections were built on an earlier extraction and were not re-evaluated.
+
 ---
 
 ## Possible Next Steps
- 
+
 Metadata filtering by document or year, near-duplicate removal, table-aware extraction, a numeric grounding check that verifies answer figures appear in the cited chunks, an LLM-judged faithfulness metric, a larger evaluation set, and Qdrant in Docker for concurrent access.
 
 ---
